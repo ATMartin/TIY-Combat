@@ -19,9 +19,20 @@ Player.prototype = {
   class: null,
   healthMax: 100,
   healthNow: 100,
+  isDead: false,
+  doneTurn: false,
   setHealth: function(amt) {
     this.healthNow = amt;
+    if (this.healthNow < 0) { this.healthNow = 0; }
+    if (this.healthNow > this.healthMax) { this.healthNow = this.healthMax; }
     renderHealth(this, this.healthbar);
+  },
+  doAction: function(ability, target) {
+    var target = target || ((ability.selfTarget) ? this : opponent);
+    doDamage(ability.damage, target);
+    writeToConsole(this.name + " performed " + ability.name + " for " + ability.damage + "dmg to " + target.name + "!");
+    var nextPlayer = (this === thisPlayer) ? opponent : thisPlayer;
+    gameLoop(nextPlayer);
   }
 };
 
@@ -122,11 +133,12 @@ var clearConsole = function() {
 //---- GAME ACTIONS & LOGIC ---------
 
 var renderHealth = function(target, healthbar) {
-  var newRot = 135 - (target.healthNow/target.healthMax)*90 ;
+  var newRot = 135 - (target.healthNow/target.healthMax)*90;
   if (target === opponent) { newRot = -newRot; }
   healthbar.animate(
     {rot: newRot},
     {step: function(now, tween) {
+        if (Math.abs(now) < 45) { return; }
         $(this).css('transform', 'rotateZ('+now+'deg)');
       }, 
       duration: 300
@@ -136,13 +148,38 @@ var renderHealth = function(target, healthbar) {
 
 var doDamage = function(dmg, target) {
   target.setHealth(target.healthNow - dmg);
+  if (target.healthNow <= 0) { target.isDead = true; };
 };
 
+/*
 var doAction = function(ability, target) {
-    doDamage(ability.damage, target);
+    doDamage(ability.damage, target);  
 }
+*/
+
+/*
+var doTurn = function(player) {
+  player.doneTurn = false;
+  while (!player.doneTurn) { 
+    //do nothing - waaaiiittt...i
+    console.log('waiting');
+    return false;
+  }
+  //player is done
+  return true;
+};
+*/
+
+var endGame = function(player) {
+  console.log(player.name + " has died first and lost the game!");
+  $('.game-over-inner h1').text(player.name + $('.game-over-inner').text());
+  bringToFront($('.game-over'));
+  $('.game-over').addClass('fade-in');
+};
+
 //---- ONLOAD AND GAME LOOP----------
 $(document).ready(function() {
+  sendToBack($('.game-over'));
   sendToBack($('.game-init'));
   sendToBack($('.game-main'));
   bringToFront($('.splash'));
@@ -163,10 +200,20 @@ var gameInit = function() {
   $('.player2.name').text(opponent.name);
   opponent.class.abilities.forEach(function(a) {
     $('.player2.abilities').append('<div class="ability" data-ability="'+a.ref+'">'+a.name+'</div>');  
-  });    
-
+  });
+  
+  gameLoop(thisPlayer);    
 };
 
+var gameLoop = function(player) {
+  if (player.isDead === false) {
+    //player = (player === opponent) ? thisPlayer: opponent;
+    console.log(player.name + "'s turn!");
+    return;
+  } else {
+    endGame(player);
+  }
+}
 
 //----- EVENT HANDLERS --------------
 $('.splash-go').on('click', function() {
@@ -193,7 +240,7 @@ $('.player1.abilities').on('mouseover', '.ability', function(e) {
 $('.player1.abilities').on('click', '.ability', function(e) {
   var me = $(this);
   var action = _.find(thisPlayer.class.abilities, function(a) { return a.ref===me.attr('data-ability');});
-  writeToConsole(thisPlayer.name + " perfomed " + action.name + " for " + action.damage + "dmg to " + ((action.targetSelf) ? "themselves." : "their opponent."));  
+  thisPlayer.doAction(action);
 });
 
 $('.player2.abilities').on('mouseover', '.ability', function(e) {
@@ -204,7 +251,9 @@ $('.player2.abilities').on('mouseover', '.ability', function(e) {
 $('.player2.abilities').on('click', '.ability', function(e) {
   var me = $(this);
   var action = _.find(opponent.class.abilities, function(a) { return a.ref===me.attr('data-ability');});
-  writeToConsole(opponent.name + " performed " + action.name + " for " + action.damage + "dmg to " + ((action.targetSelf) ? "themselves." : "their opponent."));
+  opponent.doAction(action);
 });
 
-
+$('.game-reload').on('click', function(e) {
+  window.location.reload();    
+});
