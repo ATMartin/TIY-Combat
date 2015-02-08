@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head lang="en">
+  <meta charset="utf-8">
+  <title>COOOMMMMMBAAAAT</title>
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+
+  <div class="fog"></div>
+  <div class="hide-behind"></div>
+  <div class="splash">
+    <h1>CooOOooOOMBAT!</h1>
+    <button class="splash-go">Start Game</button>
+  </div>
+  <div class="game-init">
+    <h1>Game Init</h1>
+    <label for="username">Your Name:</label>
+    <input type="text" name="username" class="username">
+    <h2>Your Class:</h2>
+    <div class="select-container">
+      <div class="game-select game-class" data-class="monk">Monk</div>
+      <div class="game-select game-class" data-class="paladin">Paladin</div>
+      <div class="game-select game-class" data-class="wizard">Wizard</div>
+      <div class="game-select game-class" data-class="thief">Thief</div>
+    </div>
+    <!-- TODO:
+    <h2>Game Type:</h2>
+    <div class="select-container">
+      <div class="game-select game-type-pve"></div>
+      <div class="game-select game-type-pvp"></div>
+      <div class="game-select game-type-ffa"></div>
+      <div class="game-select game-type-mmo"></div>
+    </div>
+    <h2>Game Scene:</h2>
+    <div class="select-container">
+      <div class="game-select game-scene-woods"></div>
+      <div class="game-select game-scene-beach"></div>
+      <div class="game-select game-scene-temple"></div>
+      <div class="game-select game-scene-urban"></div>
+    </div>
+    -->
+    <button class="game-go">FIGHT!</button>
+  </div>
+  <div class="game-main">
+    <div class="menu-bar">
+      <span class="fa fa-help"></span>
+      <span class="fa fa-speaker"></span>
+    </div>
+    <div class="combat-viewport">
+      <div class="player1-container"></div>
+      <div class="player2-container"></div>
+    </div>
+    <div class="hud">
+      <div class="left-stats">
+        <div class="health-box player1"></div>
+      </div>
+      <div class="left-options">
+        <div class="player1 name"></div>
+        <div class="player1 abilities"></div>
+        <div class="player1 descriptions"></div>
+      </div>
+      <div class="action-queue">
+        <textarea class="output" rows="16" cols="85" disabled></textarea>
+      </div>
+      <div class="right-options">
+        <div class="player2 name"></div>
+        <div class="player2 abilities"></div>
+        <div class="player2 descriptions"></div>
+      </div>
+      <div class="right-stats">
+        <div class="health-box player2"></div>
+      </div>
+    </div>
+  </div>
+  <!-- TEMPLATES -->
+  <!-- SCRIPTS -->
+  <script type="text/javascript" src="js/vendor.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>
+
