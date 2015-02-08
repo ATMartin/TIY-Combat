@@ -18,7 +18,11 @@ Player.prototype = {
   human: false,
   class: null,
   healthMax: 100,
-  healthNow: 100
+  healthNow: 100,
+  setHealth: function(amt) {
+    this.healthNow = amt;
+    renderHealth(this, this.healthbar);
+  }
 };
 
 
@@ -39,8 +43,9 @@ CharClass.prototype = {
 };
 
 // Ability Object
-var Ability = function(name, targetSelf, damage, description) {
+var Ability = function(name, ref, targetSelf, damage, description) {
   this.name = name;
+  this.ref = ref;
   this.targetSelf = targetSelf;
   this.damage = damage;
   this.description = description;
@@ -58,33 +63,42 @@ Ability.prototype = {
 // Init Basic Abilities
 var
   // DPS
-  bodySlam = new Ability('Body Slam', false, 5, "You bash your opponent!"),
-  magicMissle = new Ability('Magic Missle', false, 10, "You shoot a concentrated burst of magic power!"),
+  bodySlam = new Ability('Body Slam', 'bodySlam', false, 5, "You bash your opponent!"),
+  magicMissile = new Ability('Magic Missile', 'magicMissile', false, 10, "You shoot a concentrated burst of magic power!"),
   // Meatshield
    
   // Heals Plz
-  potionHeal = new Ability('Healing Potion', true, -10, "Your wounds begin to mend themselves."),
+  potionHeal = new Ability('Healing Potion', 'potionHeal', true, -10, "Your wounds begin to mend themselves."),
   // Unglued
-  finishHim = new Ability('FINISH HIM', false, 1000, "BONES CRUNCH, YOUR OPPONENT WHIMPERS"),
+  finishHim = new Ability('FINISH HIM', 'finishHim', false, 1000, "BONES CRUNCH, YOUR OPPONENT WHIMPERS"),
 
 // Init Player Classes
   monk = new CharClass('Monk', [bodySlam, finishHim]),
   paladin = new CharClass('Paladin', [bodySlam, potionHeal]),
-  wizard = new CharClass('Wizard', [magicMissle, finishHim]),
+  wizard = new CharClass('Wizard', [magicMissile, finishHim]),
   thief = new CharClass('Thief', [bodySlam, potionHeal]);
   
 // DOM Elements
 var
   $console = $('.output'),
+  
   $player1 = $('.player1-container'),
-  $player2 = $('.player2-container');
   $p1Healthbar = $('.health-box.player1');
+  $p1Details = $('.player1.descriptions');
+  
+  $player2 = $('.player2-container');
   $p2Healthbar = $('.health-box.player2');
+  $p2Details= $('.player2.descriptions');
 
 // Players
 var
-  thisPlayer = new Player(null, true, true, {});
-  opponent = new Player(null, true, false, {});
+  thisPlayer = new Player(null, true, true, {healthbar: $p1Healthbar});
+  opponent = new Player("Enemy", true, false, {healthbar: $p2Healthbar});
+
+var randomEnemy = function() {
+  var classes = [monk, paladin, wizard, thief];
+  opponent.class = classes[Math.floor(Math.random() * classes.length)];
+};
 
 // Modal Dialog Controls
 var sendToBack = function($el) {
@@ -105,20 +119,52 @@ var clearConsole = function() {
   $console.text('');
 }
 
+//---- GAME ACTIONS & LOGIC ---------
 
+var renderHealth = function(target, healthbar) {
+  var newRot = 135 - (target.healthNow/target.healthMax)*90 ;
+  if (target === opponent) { newRot = -newRot; }
+  healthbar.animate(
+    {rot: newRot},
+    {step: function(now, tween) {
+        $(this).css('transform', 'rotateZ('+now+'deg)');
+      }, 
+      duration: 300
+    }
+  );
+}
+
+var doDamage = function(dmg, target) {
+  target.setHealth(target.healthNow - dmg);
+};
+
+var doAction = function(ability, target) {
+    doDamage(ability.damage, target);
+}
 //---- ONLOAD AND GAME LOOP----------
 $(document).ready(function() {
   sendToBack($('.game-init'));
   sendToBack($('.game-main'));
-  bringToFront($('.splash'));  
+  bringToFront($('.splash'));
+  renderHealth(thisPlayer, $p1Healthbar);
+  renderHealth(opponent, $p2Healthbar);  
 });
 
 var gameInit = function() {
-  $player1.text(thisPlayer.class.name);  
+  
+  $player1.text(thisPlayer.class.name);
   $('.player1.name').text(thisPlayer.name);
   thisPlayer.class.abilities.forEach(function(a) {
-    $('.player1.abilities').append('<div data-ability="'+a+'">'+a.name+'</div>');
-  }); 
+    $('.player1.abilities').append('<div class="ability" data-ability="'+a.ref+'">'+a.name+'</div>');
+  });
+  
+  randomEnemy();
+  $player2.text(opponent.class.name);
+  $('.player2.name').text(opponent.name);
+  opponent.class.abilities.forEach(function(a) {
+    $('.player2.abilities').append('<div class="ability" data-ability="'+a.ref+'">'+a.name+'</div>');  
+  });    
+
 };
 
 
@@ -138,3 +184,27 @@ $('.game-go').on('click', function() {
 $('.game-class').on('click', function() {
   thisPlayer.class = eval($(this).attr('data-class'));
 });
+
+$('.player1.abilities').on('mouseover', '.ability', function(e) {
+  var me = $(this);
+  $p1Details.text(_.find(thisPlayer.class.abilities, function(a) { return a.ref===me.attr('data-ability');}).description);  
+});
+
+$('.player1.abilities').on('click', '.ability', function(e) {
+  var me = $(this);
+  var action = _.find(thisPlayer.class.abilities, function(a) { return a.ref===me.attr('data-ability');});
+  writeToConsole(thisPlayer.name + " perfomed " + action.name + " for " + action.damage + "dmg to " + ((action.targetSelf) ? "themselves." : "their opponent."));  
+});
+
+$('.player2.abilities').on('mouseover', '.ability', function(e) {
+  var me = $(this);
+  $p2Details.text(_.find(opponent.class.abilities, function(a) { return a.ref===me.attr('data-ability');}).description);  
+});
+
+$('.player2.abilities').on('click', '.ability', function(e) {
+  var me = $(this);
+  var action = _.find(opponent.class.abilities, function(a) { return a.ref===me.attr('data-ability');});
+  writeToConsole(opponent.name + " performed " + action.name + " for " + action.damage + "dmg to " + ((action.targetSelf) ? "themselves." : "their opponent."));
+});
+
+
