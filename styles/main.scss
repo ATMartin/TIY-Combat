@@ -48,6 +48,17 @@ html, body {
   left: 37%;
   top: 50px;
   background: #fff;
+  .username {
+    text-align: center;
+    width: 90%;
+    height: 50px;
+    font-size: 40px;
+    line-height: 40px;
+  }
+  h4 { 
+    margin: 5px auto; 
+    font-style: italic;
+  }
   .select-container {
     border: 2px solid gray;
     width: 90%;
@@ -78,6 +89,10 @@ html, body {
       &:hover:after {
         opacity: 0;
       }
+    }
+    .game-select-highlight {
+      box-shadow: 0 0 3px white;
+      &:after { opacity: 0; }
     }
   }
   .game-go {
@@ -132,15 +147,16 @@ html, body {
       width: 300px;
       height: 300px;
       position: absolute;
-      bottom: 300px;  
+      bottom: 300px;
+      padding-top: 100px;  
     }
     .player1-container {
-      left: 50px;
-      background: green;
+      left: 350px;
+      //background: green;
     }
     .player2-container {
-      right: 50px;
-      background: red;
+      right: 350px;
+      //background: red;
     }
   }
 
@@ -288,3 +304,6 @@ html, body {
 .fade-in {
   opacity: 1;
 }
+
+//Roundlings
+@import 'characters';

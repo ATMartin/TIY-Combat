@@ -15,14 +15,22 @@
   </div>
   <div class="game-init">
     <h1>Game Init</h1>
-    <label for="username">Your Name:</label>
-    <input type="text" name="username" class="username">
-    <h2>Your Class:</h2>
+    <!-- <label for="username">Your Name:</label> -->
+    <input type="text" name="username" class="username" placeholder="Your Name?">
+    <h2>Your Class</h2>
     <div class="select-container">
       <div class="game-select game-class" data-class="monk">Monk</div>
       <div class="game-select game-class" data-class="paladin">Paladin</div>
       <div class="game-select game-class" data-class="wizard">Wizard</div>
       <div class="game-select game-class" data-class="thief">Thief</div>
+    </div>
+    <h2>Your Opponent</h2>
+    <h4>(leave blank for random)</h4>
+    <div class="select-container">
+      <div class="game-select enemy-class" data-class="monk">Monk</div>
+      <div class="game-select enemy-class" data-class="paladin">Paladin</div>
+      <div class="game-select enemy-class" data-class="wizard">Wizard</div>
+      <div class="game-select enemy-class" data-class="thief">Thief</div>
     </div>
     <!-- TODO:
     <h2>Game Type:</h2>
@@ -82,6 +90,48 @@
     </div>
   </div>
   <!-- TEMPLATES -->
+  <script type="text/template" data-template="roundling">
+    <div class="roundling">
+      <div class="eye-left">
+        <div class="eyebrow"></div>
+        <div class="pupil"></div>
+      </div>
+      <div class="eye-right">
+        <div class="eyebrow"></div>
+        <div class="pupil"></div>
+      </div>
+      <div class="mouth"></div>
+      <div class="weapon"></div>
+      <div class="clothing"></div>
+    </div>
+  </script>
+
+  <script type="text/template" data-template="sword">
+    <div class="sword">
+      <div class="handle"></div>
+      <div class="crossguard"></div>
+      <div class="blade"></div>
+      <div class="tip"></div>
+    </div>
+  </script>
+
+  <script type="text/template" data-template="staff">
+    <div class="staff">
+      <div class="shaft"></div>
+      <div class="lprong"></div>
+      <div class="rprong"></div>
+      <div class="gem"></div>
+    </div>
+  </script>
+
+  <script type="text/template" data-template="dirk">
+    <div class="dirk">
+      <div class="pommel"></div>
+      <div class="handle"></div>
+      <div class="blade"></div>
+    </div>
+  </script>
+
   <!-- SCRIPTS -->
   <script type="text/javascript" src="js/vendor.js"></script>
   <script type="text/javascript" src="js/main.js"></script>

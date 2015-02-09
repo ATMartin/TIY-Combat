@@ -1,0 +1,182 @@
+
+//----------- ROUNDLING CORE -------------
+.roundling {
+  margin: 0 auto;
+  position: relative;
+  height: 150px;
+  width: 150px;
+  background: #3af;
+  border-radius: 50%;
+  .eye-left,
+  .eye-right {
+    position: absolute;
+    background: white;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    transition: all ease 0.5s;
+    .eyebrow {
+      width: 15px;
+      height: 5px;
+      border: 15px solid transparent;
+      border-top-color: black;
+      border-left-color: black;
+      border-radius: 50%;
+      transform: rotateZ(40deg);
+      transition: all ease 0.5s;
+    }
+    .pupil {
+      position: absolute;
+      width: 5px;
+      height: 10px;
+      background: black;
+      border-radius: 50%;
+      top: 15px;
+      left: 20px;
+    }
+  }
+
+  .eye-left {
+    top: 40px;
+    right: 15px;
+  }
+
+  .eye-right {
+    top: 40px;
+    right: 50px;
+  }
+
+  .mouth{
+    position: absolute;
+    bottom: 40px;
+    right: 20px;
+    border-radius: 0 0 50% 50%;
+    background: black;
+    height: 20px;
+    width: 40px;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: -15px;
+    left: 30px;
+    width: 100px;
+    height: 10px;
+    border-radius: 50%;
+    background: #333;
+  }
+}
+
+//----------- END ROUNDLING CORE ---------------
+
+//----------- CLOTHING ------------------------
+
+.helmet {}
+.monk-hat {}
+.bandana {}
+.wizard-hat {}
+
+//------------- TOOLS -------------------------
+.sword {
+  position: absolute;
+  top: 80px;
+  left: 30px;
+  transform: rotateZ(-30deg);
+  &>* { position: absolute; }
+  .handle {
+    width: 15px;
+    height: 40px;
+    background: brown;
+  }
+  .crossguard {
+    width: 40px;
+    height: 10px;
+    background: yellow;
+    left: -13px;
+  }
+  .blade {
+    width: 20px;
+    height: 80px;
+    background: #ddd;
+    bottom: 0px;
+    left: -2px;
+  }
+  .tip {
+    bottom: 80px;
+    left: -2px;
+    border: 10px solid transparent;
+    border-bottom-color: #ddd;
+  }
+}
+
+.staff {
+  position: absolute;
+  left: 50px;
+  top: 40px;
+  transform: rotateZ(10deg);
+  &>* { position: absolute; }
+  .shaft {
+      width: 15px;
+      height: 120px;
+      background: brown;
+  }
+  .lprong,
+  .rprong {
+    width: 30px;
+    height: 5px;
+    background: brown;
+  }
+  .lprong {
+    left: -15px;
+    transform: rotateZ(70deg);
+  }
+  .rprong {
+    transform: rotateZ(-70deg);
+  }
+  .gem {
+    top: -18px;
+    height: 20px;
+    width: 15px;
+    background: #a0f;
+    border-radius: 50%;
+    &:after {
+      content: "";
+      height: 3px;
+      width: 3px;
+      background: white;
+      position: absolute;
+      top: 3px;
+      right: 3px;
+    }
+  }
+}
+
+.dirk {
+  position: absolute;
+  top: 110px;
+  left: 60px;
+  transform: rotateZ(110deg);
+  &>* { position: absolute; }
+  .pommel {
+    top: 20px;
+    width: 15px;
+    height: 5px;
+    background: gray;
+  }
+  .handle {
+    width: 10px;
+    height: 20px;
+    background: black;
+  }
+  .blade {
+    width: 18px;
+    height: 50px;
+    background: gray;
+    bottom: 0;
+    border-right: 3px solid white;
+    border-radius: 50% 50% 0 0;
+  }      
+}
+
+.bo {}

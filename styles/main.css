@@ -51,6 +51,17 @@ html, body {
   top: 50px;
   background: #fff;
 }
+.game-init .username {
+  text-align: center;
+  width: 90%;
+  height: 50px;
+  font-size: 40px;
+  line-height: 40px;
+}
+.game-init h4 {
+  margin: 5px auto;
+  font-style: italic;
+}
 .game-init .select-container {
   border: 2px solid gray;
   width: 90%;
@@ -82,6 +93,12 @@ html, body {
           transition: opacity ease 0.5s;
 }
 .game-init .select-container .game-select:hover:after {
+  opacity: 0;
+}
+.game-init .select-container .game-select-highlight {
+  box-shadow: 0 0 3px white;
+}
+.game-init .select-container .game-select-highlight:after {
   opacity: 0;
 }
 .game-init .game-go {
@@ -136,14 +153,13 @@ html, body {
   height: 300px;
   position: absolute;
   bottom: 300px;
+  padding-top: 100px;
 }
 .game-main .combat-viewport .player1-container {
-  left: 50px;
-  background: green;
+  left: 350px;
 }
 .game-main .combat-viewport .player2-container {
-  right: 50px;
-  background: red;
+  right: 350px;
 }
 .game-main .hud {
   background: #00a;
@@ -302,4 +318,185 @@ html, body {
 
 .fade-in {
   opacity: 1;
+}
+
+.roundling {
+  margin: 0 auto;
+  position: relative;
+  height: 150px;
+  width: 150px;
+  background: #3af;
+  border-radius: 50%;
+}
+.roundling .eye-left,
+.roundling .eye-right {
+  position: absolute;
+  background: white;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  -webkit-transition: all ease 0.5s;
+          transition: all ease 0.5s;
+}
+.roundling .eye-left .eyebrow,
+.roundling .eye-right .eyebrow {
+  width: 15px;
+  height: 5px;
+  border: 15px solid transparent;
+  border-top-color: black;
+  border-left-color: black;
+  border-radius: 50%;
+  -webkit-transform: rotateZ(40deg);
+          transform: rotateZ(40deg);
+  -webkit-transition: all ease 0.5s;
+          transition: all ease 0.5s;
+}
+.roundling .eye-left .pupil,
+.roundling .eye-right .pupil {
+  position: absolute;
+  width: 5px;
+  height: 10px;
+  background: black;
+  border-radius: 50%;
+  top: 15px;
+  left: 20px;
+}
+.roundling .eye-left {
+  top: 40px;
+  right: 15px;
+}
+.roundling .eye-right {
+  top: 40px;
+  right: 50px;
+}
+.roundling .mouth {
+  position: absolute;
+  bottom: 40px;
+  right: 20px;
+  border-radius: 0 0 50% 50%;
+  background: black;
+  height: 20px;
+  width: 40px;
+}
+.roundling:after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 30px;
+  width: 100px;
+  height: 10px;
+  border-radius: 50%;
+  background: #333;
+}
+
+.sword {
+  position: absolute;
+  top: 80px;
+  left: 30px;
+  -webkit-transform: rotateZ(-30deg);
+          transform: rotateZ(-30deg);
+}
+.sword > * {
+  position: absolute;
+}
+.sword .handle {
+  width: 15px;
+  height: 40px;
+  background: brown;
+}
+.sword .crossguard {
+  width: 40px;
+  height: 10px;
+  background: yellow;
+  left: -13px;
+}
+.sword .blade {
+  width: 20px;
+  height: 80px;
+  background: #ddd;
+  bottom: 0px;
+  left: -2px;
+}
+.sword .tip {
+  bottom: 80px;
+  left: -2px;
+  border: 10px solid transparent;
+  border-bottom-color: #ddd;
+}
+
+.staff {
+  position: absolute;
+  left: 50px;
+  top: 40px;
+  -webkit-transform: rotateZ(10deg);
+          transform: rotateZ(10deg);
+}
+.staff > * {
+  position: absolute;
+}
+.staff .shaft {
+  width: 15px;
+  height: 120px;
+  background: brown;
+}
+.staff .lprong,
+.staff .rprong {
+  width: 30px;
+  height: 5px;
+  background: brown;
+}
+.staff .lprong {
+  left: -15px;
+  -webkit-transform: rotateZ(70deg);
+          transform: rotateZ(70deg);
+}
+.staff .rprong {
+  -webkit-transform: rotateZ(-70deg);
+          transform: rotateZ(-70deg);
+}
+.staff .gem {
+  top: -18px;
+  height: 20px;
+  width: 15px;
+  background: #a0f;
+  border-radius: 50%;
+}
+.staff .gem:after {
+  content: "";
+  height: 3px;
+  width: 3px;
+  background: white;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+}
+
+.dirk {
+  position: absolute;
+  top: 110px;
+  left: 60px;
+  -webkit-transform: rotateZ(110deg);
+          transform: rotateZ(110deg);
+}
+.dirk > * {
+  position: absolute;
+}
+.dirk .pommel {
+  top: 20px;
+  width: 15px;
+  height: 5px;
+  background: gray;
+}
+.dirk .handle {
+  width: 10px;
+  height: 20px;
+  background: black;
+}
+.dirk .blade {
+  width: 18px;
+  height: 50px;
+  background: gray;
+  bottom: 0;
+  border-right: 3px solid white;
+  border-radius: 50% 50% 0 0;
 }

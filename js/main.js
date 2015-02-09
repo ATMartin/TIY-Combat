@@ -1,5 +1,6 @@
 // Globals
-
+var allAbilities = [],
+    allClasses = [];
 
 // Player Object
 var Player = function(name, local, human, opts) {
@@ -28,7 +29,7 @@ Player.prototype = {
     renderHealth(this, this.healthbar);
   },
   doAction: function(ability, target) {
-    var target = target || ((ability.selfTarget) ? this : opponent);
+    var target = target || ((ability.targetSelf) ? this : this.opponent);
     doDamage(ability.damage, target);
     writeToConsole(this.name + " performed " + ability.name + " for " + ability.damage + "dmg to " + target.name + "!");
     var nextPlayer = (this === thisPlayer) ? opponent : thisPlayer;
@@ -41,10 +42,7 @@ Player.prototype = {
 var CharClass = function(name, abilities) {
   this.name = name;
   this.abilities = abilities;
-  //var me = this;
-  //abilities.forEach(function(a) {
-  //  me.abilities.push(a);
-  //});
+  allClasses.push(this);
   return this;
 };
 
@@ -60,6 +58,7 @@ var Ability = function(name, ref, targetSelf, damage, description) {
   this.targetSelf = targetSelf;
   this.damage = damage;
   this.description = description;
+  allAbilities.push(this);
   return this;
 }
 
@@ -96,19 +95,23 @@ var
   $player1 = $('.player1-container'),
   $p1Healthbar = $('.health-box.player1');
   $p1Details = $('.player1.descriptions');
-  
+  $p1Model = $('.player1-container');
+
   $player2 = $('.player2-container');
   $p2Healthbar = $('.health-box.player2');
   $p2Details= $('.player2.descriptions');
+  $p2Model = $('.player2-container');
 
 // Players
 var
-  thisPlayer = new Player(null, true, true, {healthbar: $p1Healthbar});
-  opponent = new Player("Enemy", true, false, {healthbar: $p2Healthbar});
-
+  thisPlayer = new Player(null, true, true, { healthbar: $p1Healthbar, model: $p1Model }),
+  opponent = new Player("Enemy", true, false, { healthbar: $p2Healthbar, model: $p2Model });
+  thisPlayer.opponent = opponent;
+  opponent.opponent = thisPlayer;
+   
 var randomEnemy = function() {
   var classes = [monk, paladin, wizard, thief];
-  opponent.class = classes[Math.floor(Math.random() * classes.length)];
+  opponent.class = opponent.class || classes[Math.floor(Math.random() * classes.length)];
 };
 
 // Modal Dialog Controls
@@ -151,24 +154,27 @@ var doDamage = function(dmg, target) {
   if (target.healthNow <= 0) { target.isDead = true; };
 };
 
-/*
-var doAction = function(ability, target) {
-    doDamage(ability.damage, target);  
-}
-*/
-
-/*
-var doTurn = function(player) {
-  player.doneTurn = false;
-  while (!player.doneTurn) { 
-    //do nothing - waaaiiittt...i
-    console.log('waiting');
-    return false;
-  }
-  //player is done
-  return true;
+var randomAction = function(player) {
+    var action = player.class.abilities[Math.floor(Math.random() * player.class.abilities.length)];
+    player.doAction(action);
 };
-*/
+
+var loadCharModel = function(player) {
+  player.model.html($('[data-template="roundling"]').text());
+  var weapon = null;
+  switch (player.class.name) {
+    case "Paladin":
+      weapon = 'sword';
+      break;
+    case "Thief":
+      weapon = 'dirk';
+      break;
+    case "Wizard":
+      weapon = 'staff';
+      break;
+    }
+  if (weapon) { player.model.find('.weapon').html($('[data-template="'+weapon+'"]').text()); }
+};
 
 var endGame = function(player) {
   console.log(player.name + " has died first and lost the game!");
@@ -191,6 +197,9 @@ var gameInit = function() {
   
   $player1.text(thisPlayer.class.name);
   $('.player1.name').text(thisPlayer.name);
+  $('.player1-container').html($('[data-template="roundling"]').text());
+  loadCharModel(thisPlayer);
+  thisPlayer.model.find('.roundling').css({'background-color': 'green'});
   thisPlayer.class.abilities.forEach(function(a) {
     $('.player1.abilities').append('<div class="ability" data-ability="'+a.ref+'">'+a.name+'</div>');
   });
@@ -198,6 +207,8 @@ var gameInit = function() {
   randomEnemy();
   $player2.text(opponent.class.name);
   $('.player2.name').text(opponent.name);
+  loadCharModel(opponent);
+  opponent.model.find('.roundling').css({'transform': 'rotateY(180deg)', 'background-color': 'red'});
   opponent.class.abilities.forEach(function(a) {
     $('.player2.abilities').append('<div class="ability" data-ability="'+a.ref+'">'+a.name+'</div>');  
   });
@@ -206,14 +217,19 @@ var gameInit = function() {
 };
 
 var gameLoop = function(player) {
+ 
   if (player.isDead === false) {
-    //player = (player === opponent) ? thisPlayer: opponent;
     console.log(player.name + "'s turn!");
+    if (!player.human) { randomAction(player); }
     return;
   } else {
     endGame(player);
   }
 }
+//----- GRAPHICS EVENTS -------------
+
+
+
 
 //----- EVENT HANDLERS --------------
 $('.splash-go').on('click', function() {
@@ -230,6 +246,14 @@ $('.game-go').on('click', function() {
 
 $('.game-class').on('click', function() {
   thisPlayer.class = eval($(this).attr('data-class'));
+  $('.game-class').removeClass('game-select-highlight');
+  $(this).addClass('game-select-highlight');
+});
+
+$('.enemy-class').on('click', function() {
+  opponent.class = eval($(this).attr('data-class'));
+  $('.enemy-class').removeClass('game-select-highlight');
+  $(this).addClass('game-select-highlight');
 });
 
 $('.player1.abilities').on('mouseover', '.ability', function(e) {
