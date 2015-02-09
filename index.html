@@ -3,6 +3,7 @@
 <head lang="en">
   <meta charset="utf-8">
   <title>COOOMMMMMBAAAAT</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/octicons/2.1.2/octicons.min.css">
   <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
@@ -40,20 +41,25 @@
       <div class="game-select game-type-ffa"></div>
       <div class="game-select game-type-mmo"></div>
     </div>
+    -->
     <h2>Game Scene:</h2>
     <div class="select-container">
-      <div class="game-select game-scene-woods"></div>
-      <div class="game-select game-scene-beach"></div>
-      <div class="game-select game-scene-temple"></div>
-      <div class="game-select game-scene-urban"></div>
+      <div class="game-select game-scene" data-scene="hedges">Hedges</div>
+      <div class="game-select game-scene" data-scene="woods">Forest</div>
     </div>
-    -->
     <button class="game-go">FIGHT!</button>
   </div>
   <div class="game-main">
     <div class="menu-bar">
-      <span class="fa fa-help"></span>
-      <span class="fa fa-speaker"></span>
+      <div class="help">
+        <span class="octicon octicon-question"></span>
+      </div>
+      <div class="toggle-sound">
+        <span class="octicon octicon-mute"></span>
+      </div>
+      <div class="end-game">
+        <span class="octicon octicon-x"></span>
+      </div>
     </div>
     <div class="combat-viewport">
       <div class="player1-container"></div>
@@ -62,6 +68,11 @@
     <div class="hud">
       <div class="left-stats">
         <div class="health-box player1"></div>
+        <div class="stat-box player1">
+          <span class="health-percentage">100%</span>
+          <hr>
+          <span class="status octicon octicon-zap"></span>
+        </div>
       </div>
       <div class="left-options">
         <div class="player1 name"></div>
@@ -78,6 +89,11 @@
       </div>
       <div class="right-stats">
         <div class="health-box player2"></div>
+        <div class="stat-box player2">
+           <span class="health-percentage">100%</span>       
+           <hr>
+           <span class="status octicon octicon-zap"></span>
+        </div>
       </div>
     </div>
   </div>

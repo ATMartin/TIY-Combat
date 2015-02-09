@@ -19,11 +19,14 @@ html, body {
 }
 
 .splash {
+  position: fixed;
+  top: 200px;
   //height: 500px;
   width: 500px;
   border: 5px solid gray;
   left: 37%;
   top: 50px;
+  background: white;
   .splash-go {
     width: 100%;
     bottom: 0;
@@ -42,8 +45,12 @@ html, body {
 }
 
 .game-init {
+  position: fixed;
+  top: 100px;
   width: 500px;
   min-height: 400px;
+  max-height: 800px;
+  overflow: auto;
   border: 5px solid gray;
   left: 37%;
   top: 50px;
@@ -94,6 +101,11 @@ html, body {
       box-shadow: 0 0 3px white;
       &:after { opacity: 0; }
     }
+    .game-scene {
+      background-size: contain;
+      &[data-scene="hedges"] { background-image: url('/img/hedgerow.svg'); }
+      &[data-scene="woods"] { background-image: url('/img/scene-forest.svg'); }
+    }
   }
   .game-go {
     width: 100%;
@@ -116,6 +128,8 @@ html, body {
   z-index: 0;
   background: white;
   height: 100%;
+  min-height: 1000px;
+  background-image: url('/img/hedgerow.svg');
 }
 
 .fog {
@@ -125,47 +139,69 @@ html, body {
 }
 
 .game-main {
-  height: 100%;
+  height: 900px;
   
   .menu-bar {
-    background: #0f0;
-    position: relative;
+    position: fixed;
     top: 0;
     height: 100px;
     width: 100%;
-    opacity: 0.2;
+    opacity: 0.8;
     text-align: right;
+    line-height: 50px;
+    padding: 10px 20px;
+    color: black;
+    &>* {
+      display: inline-block;
+      height: 75px;
+      width: 75px;
+      margin: 0 10px;
+      background: white;
+      border-radius: 50%;
+      line-height: 70px;
+      text-align: center;
+      transition: all ease 0.5s;
+      &:hover {
+        background: gray;
+        color: white;
+      }
+      span {
+        font-size: 50px;
+        margin-top: 10px;
+       }
+    }
   }
 
   .combat-viewport {
-    position: relative;
-    height: 100%;
-    margin: -100px 0 -240px 0;
+    position: absolute;
+    bottom: 0;
+    height: 660px;
     //padding: 10px 0;
     .player1-container,
     .player2-container {
       width: 300px;
       height: 300px;
       position: absolute;
-      bottom: 300px;
+      bottom: 200px;
       padding-top: 100px;  
     }
     .player1-container {
-      left: 350px;
+      left: 300px;
       //background: green;
     }
     .player2-container {
-      right: 350px;
+      left: 1100px;
       //background: red;
     }
   }
 
   .hud {
-    background: #00a;
-    position: absolute;
+    //background: #00a;
+    position: fixed;
     bottom: 0;
     height: 240px;
     width: 100%;
+    font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
     overflow: hidden;
     &>div {
       display: inline-block;
@@ -175,7 +211,7 @@ html, body {
     .left-stats, 
     .right-stats {
       width: 15%;
-      border: 1px solid gray;
+      //border: 1px solid gray;
       position: absolute;
       bottom: 0;
     }
@@ -184,7 +220,7 @@ html, body {
     
     .health-box {
       position: absolute;
-      border: 40px solid transparent;
+      border: 80px solid transparent;
       border-top-color: red;
       border-radius: 50%;
       height: 500px;
@@ -199,11 +235,36 @@ html, body {
         transform: rotateZ(-45deg);
       }
     }
+
+    .stat-box {
+      position: absolute;
+      height: 100px;
+      width: 100px;
+      border-radius: 50%;
+      background: white;
+      bottom: 15px;
+      line-height: 30px;
+      font-size: 30px;
+      text-align: center;
+      .health-percentage { 
+        display: block;
+        margin-top: 15px; 
+      }
+      hr { 
+        border: 2px solid black; 
+        margin: 5px 0;
+      }
+      .status {
+        font-size: 30px;
+      }
+      &.player1 { left: 15px; }
+      &.player2 { right: 15px; }
+    }
     
     .left-options,
     .right-options {
       width: 20%;
-      border: 1px solid gray;
+      //border: 1px solid gray;
       position: absolute;
       bottom: 0;
       height: 240px;
@@ -253,7 +314,8 @@ html, body {
         border: none;
         color: #fff;
         background: #000;
-        outline: none;        
+        outline: none;
+        width: 90%;        
       }
     }
   }

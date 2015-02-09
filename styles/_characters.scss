@@ -16,6 +16,7 @@
     border-radius: 50%;
     transition: all ease 0.5s;
     .eyebrow {
+      position: absolute;
       width: 15px;
       height: 5px;
       border: 15px solid transparent;
@@ -83,8 +84,8 @@
 
 //--Active (require JS assignment)
 .roundling.attacking {
-  .eye-left > .eyebrow  { transform: rotateZ(90deg); }
-  .eye-right > .eyebrow { transform: rotateZ(0deg);  }
+  .eye-left > .eyebrow  { transform: rotateZ(0deg); }
+  .eye-right > .eyebrow { transform: rotateZ(90deg);  }
 }
 
 .roundling.injured {
@@ -94,7 +95,7 @@
   }
   .eye-right { 
     .eyebrow { top: -2px; }
-    .pupil { right: 25px; }
+    .pupil { left: 25px; }
   }
 
   .mouth { height: 25px; }

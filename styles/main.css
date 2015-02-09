@@ -21,10 +21,13 @@ html, body {
 }
 
 .splash {
+  position: fixed;
+  top: 200px;
   width: 500px;
   border: 5px solid gray;
   left: 37%;
   top: 50px;
+  background: white;
 }
 .splash .splash-go {
   width: 100%;
@@ -44,8 +47,12 @@ html, body {
 }
 
 .game-init {
+  position: fixed;
+  top: 100px;
   width: 500px;
   min-height: 400px;
+  max-height: 800px;
+  overflow: auto;
   border: 5px solid gray;
   left: 37%;
   top: 50px;
@@ -101,6 +108,15 @@ html, body {
 .game-init .select-container .game-select-highlight:after {
   opacity: 0;
 }
+.game-init .select-container .game-scene {
+  background-size: contain;
+}
+.game-init .select-container .game-scene[data-scene="hedges"] {
+  background-image: url("/img/hedgerow.svg");
+}
+.game-init .select-container .game-scene[data-scene="woods"] {
+  background-image: url("/img/scene-forest.svg");
+}
 .game-init .game-go {
   width: 100%;
   height: 50px;
@@ -122,6 +138,8 @@ html, body {
   z-index: 0;
   background: white;
   height: 100%;
+  min-height: 1000px;
+  background-image: url("/img/hedgerow.svg");
 }
 
 .fog {
@@ -131,42 +149,64 @@ html, body {
 }
 
 .game-main {
-  height: 100%;
+  height: 900px;
 }
 .game-main .menu-bar {
-  background: #0f0;
-  position: relative;
+  position: fixed;
   top: 0;
   height: 100px;
   width: 100%;
-  opacity: 0.2;
+  opacity: 0.8;
   text-align: right;
+  line-height: 50px;
+  padding: 10px 20px;
+  color: black;
+}
+.game-main .menu-bar > * {
+  display: inline-block;
+  height: 75px;
+  width: 75px;
+  margin: 0 10px;
+  background: white;
+  border-radius: 50%;
+  line-height: 70px;
+  text-align: center;
+  -webkit-transition: all ease 0.5s;
+          transition: all ease 0.5s;
+}
+.game-main .menu-bar > *:hover {
+  background: gray;
+  color: white;
+}
+.game-main .menu-bar > * span {
+  font-size: 50px;
+  margin-top: 10px;
 }
 .game-main .combat-viewport {
-  position: relative;
-  height: 100%;
-  margin: -100px 0 -240px 0;
+  position: absolute;
+  bottom: 0;
+  height: 660px;
 }
 .game-main .combat-viewport .player1-container,
 .game-main .combat-viewport .player2-container {
   width: 300px;
   height: 300px;
   position: absolute;
-  bottom: 300px;
+  bottom: 200px;
   padding-top: 100px;
 }
 .game-main .combat-viewport .player1-container {
-  left: 350px;
+  left: 300px;
 }
 .game-main .combat-viewport .player2-container {
-  right: 350px;
+  left: 1100px;
 }
 .game-main .hud {
-  background: #00a;
-  position: absolute;
+  position: fixed;
   bottom: 0;
   height: 240px;
   width: 100%;
+  font-family: 'Helvetica Neue', 'Helvetica', sans-serif;
   overflow: hidden;
 }
 .game-main .hud > div {
@@ -177,7 +217,6 @@ html, body {
 .game-main .hud .left-stats,
 .game-main .hud .right-stats {
   width: 15%;
-  border: 1px solid gray;
   position: absolute;
   bottom: 0;
 }
@@ -189,7 +228,7 @@ html, body {
 }
 .game-main .hud .health-box {
   position: absolute;
-  border: 40px solid transparent;
+  border: 80px solid transparent;
   border-top-color: red;
   border-radius: 50%;
   height: 500px;
@@ -206,10 +245,37 @@ html, body {
   -webkit-transform: rotateZ(-45deg);
           transform: rotateZ(-45deg);
 }
+.game-main .hud .stat-box {
+  position: absolute;
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  background: white;
+  bottom: 15px;
+  line-height: 30px;
+  font-size: 30px;
+  text-align: center;
+}
+.game-main .hud .stat-box .health-percentage {
+  display: block;
+  margin-top: 15px;
+}
+.game-main .hud .stat-box hr {
+  border: 2px solid black;
+  margin: 5px 0;
+}
+.game-main .hud .stat-box .status {
+  font-size: 30px;
+}
+.game-main .hud .stat-box.player1 {
+  left: 15px;
+}
+.game-main .hud .stat-box.player2 {
+  right: 15px;
+}
 .game-main .hud .left-options,
 .game-main .hud .right-options {
   width: 20%;
-  border: 1px solid gray;
   position: absolute;
   bottom: 0;
   height: 240px;
@@ -271,6 +337,7 @@ html, body {
   color: #fff;
   background: #000;
   outline: none;
+  width: 90%;
 }
 
 .game-over {
@@ -340,6 +407,7 @@ html, body {
 }
 .roundling .eye-left .eyebrow,
 .roundling .eye-right .eyebrow {
+  position: absolute;
   width: 15px;
   height: 5px;
   border: 15px solid transparent;
@@ -398,12 +466,12 @@ html, body {
 }
 
 .roundling.attacking .eye-left > .eyebrow {
-  -webkit-transform: rotateZ(90deg);
-          transform: rotateZ(90deg);
-}
-.roundling.attacking .eye-right > .eyebrow {
   -webkit-transform: rotateZ(0deg);
           transform: rotateZ(0deg);
+}
+.roundling.attacking .eye-right > .eyebrow {
+  -webkit-transform: rotateZ(90deg);
+          transform: rotateZ(90deg);
 }
 
 .roundling.injured .eye-left .eyebrow {
@@ -416,7 +484,7 @@ html, body {
   top: -2px;
 }
 .roundling.injured .eye-right .pupil {
-  right: 25px;
+  left: 25px;
 }
 .roundling.injured .mouth {
   height: 25px;

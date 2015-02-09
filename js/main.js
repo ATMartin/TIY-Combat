@@ -26,16 +26,20 @@ Player.prototype = {
     this.healthNow = amt;
     if (this.healthNow < 0) { this.healthNow = 0; }
     if (this.healthNow > this.healthMax) { this.healthNow = this.healthMax; }
-    renderHealth(this, this.healthbar);
+    renderHealth(this);
   },
   doAction: function(ability, target) {
     var target = target || ((ability.targetSelf) ? this : this.opponent);
-    this.model.find('.roundling').addClass('attacking');
-    target.model.find('.roundling').addClass('injured');
+    var me = this;
+    anim(me, 'attacking');
+    if (this.target !== this) { anim(target, 'injured'); } 
     doDamage(ability.damage, target);
-    writeToConsole(this.name + " performed " + ability.name + " for " + ability.damage + "dmg to " + target.name + "!");
-    var nextPlayer = (this === thisPlayer) ? opponent : thisPlayer;
-    gameLoop(nextPlayer);
+    writeToConsole(me.name + " performed " + ability.name + " for " + ability.damage + "dmg to " + target.name + "!");
+    var nextPlayer = (me === thisPlayer) ? opponent : thisPlayer;
+    setTimeout(function() {
+         clearAnim(me); 
+         gameLoop(nextPlayer);
+    }, 1000);
   }
 };
 
@@ -98,16 +102,21 @@ var
   $p1Healthbar = $('.health-box.player1');
   $p1Details = $('.player1.descriptions');
   $p1Model = $('.player1-container');
+  $p1HealthText = $('.stat-box.player1 .health-percentage');
+  $p1Status = $('.stat-box.player1 .status');
 
   $player2 = $('.player2-container');
   $p2Healthbar = $('.health-box.player2');
   $p2Details= $('.player2.descriptions');
   $p2Model = $('.player2-container');
+  $p2HealthText = $('.stat-box.player2 .health-percentage');
+  $p2Status = $('.stat-box.player2 .status');
+
 
 // Players
 var
-  thisPlayer = new Player(null, true, true, { healthbar: $p1Healthbar, model: $p1Model }),
-  opponent = new Player("Enemy", true, false, { healthbar: $p2Healthbar, model: $p2Model });
+  thisPlayer = new Player(null, true, true, { healthbar: $p1Healthbar, model: $p1Model, healthtext: $p1HealthText }),
+  opponent = new Player("Enemy", true, false, { healthbar: $p2Healthbar, model: $p2Model, healthtext: $p2HealthText });
   thisPlayer.opponent = opponent;
   opponent.opponent = thisPlayer;
    
@@ -137,10 +146,12 @@ var clearConsole = function() {
 
 //---- GAME ACTIONS & LOGIC ---------
 
-var renderHealth = function(target, healthbar) {
+var renderHealth = function(target) {
+  var percentage = Math.floor((target.healthNow/target.healthMax)*100);
+  target.healthtext.text(percentage + "%");
   var newRot = 135 - (target.healthNow/target.healthMax)*90;
   if (target === opponent) { newRot = -newRot; }
-  healthbar.animate(
+  target.healthbar.animate(
     {rot: newRot},
     {step: function(now, tween) {
         if (Math.abs(now) < 45) { return; }
@@ -197,7 +208,6 @@ $(document).ready(function() {
 
 var gameInit = function() {
   
-  $player1.text(thisPlayer.class.name);
   $('.player1.name').text(thisPlayer.name);
   $('.player1-container').html($('[data-template="roundling"]').text());
   loadCharModel(thisPlayer);
@@ -207,7 +217,6 @@ var gameInit = function() {
   });
   
   randomEnemy();
-  $player2.text(opponent.class.name);
   $('.player2.name').text(opponent.name);
   loadCharModel(opponent);
   opponent.model.find('.roundling').css({'transform': 'rotateY(180deg)', 'background-color': 'red'});
@@ -219,8 +228,7 @@ var gameInit = function() {
 };
 
 var gameLoop = function(player) {
-  player.model.find('.roundling').removeClass('attacking');
-  player.model.find('.roundling').removeClass('injured');
+  clearAnim(player);
   if (player.isDead === false) {
     console.log(player.name + "'s turn!");
     if (!player.human) { randomAction(player); }
@@ -231,8 +239,13 @@ var gameLoop = function(player) {
 }
 //----- GRAPHICS EVENTS -------------
 
+var clearAnim = function(target) {
+  target.model.find('.roundling').attr('class', 'roundling');
+}
 
-
+var anim = function(target, animClass) {
+  target.model.find('.roundling').addClass(animClass);
+};
 
 //----- EVENT HANDLERS --------------
 $('.splash-go').on('click', function() {
@@ -258,6 +271,14 @@ $('.enemy-class').on('click', function() {
   $('.enemy-class').removeClass('game-select-highlight');
   $(this).addClass('game-select-highlight');
 });
+
+$('.game-scene').on('click', function() {
+  var scene = $(this).attr('data-scene');
+  if (scene === 'hedges') { $('.hide-behind').css('background', 'url(/img/hedgerow.svg)'); }
+  if (scene === 'woods')  { $('.hide-behind').css('background', 'url(/img/scene-forest.svg)'); }
+});
+
+$('.end-game').on('click', function(e) { endGame(thisPlayer); });
 
 $('.player1.abilities').on('mouseover', '.ability', function(e) {
   var me = $(this);
