@@ -50,11 +50,16 @@ html, body {
   width: 500px;
   min-height: 400px;
   max-height: 800px;
+  height: 80%;
   overflow: auto;
   border: 5px solid gray;
   left: 37%;
   top: 50px;
   background: #fff;
+  .scroll-container {
+    height: 100%;
+    overflow: scroll;
+  }
   .username {
     text-align: center;
     width: 90%;
@@ -108,15 +113,16 @@ html, body {
     }
   }
   .game-go {
+    position: absolute;
     width: 100%;
     height: 50px;
     font-size: 20px;
     outline: none;
-    border: none;
     border-top: 2px solid gray;
     background: #ddd;
     margin-top: 20px;
     bottom: 0;
+    left: 0;
     transition: all ease 0.5s;
     &:hover {
       background: #f00;
