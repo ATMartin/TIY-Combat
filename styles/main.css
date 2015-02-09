@@ -360,6 +360,8 @@ html, body {
   border-radius: 50%;
   top: 15px;
   left: 20px;
+  -webkit-transition: all ease 0.5s;
+          transition: all ease 0.5s;
 }
 .roundling .eye-left {
   top: 40px;
@@ -377,6 +379,8 @@ html, body {
   background: black;
   height: 20px;
   width: 40px;
+  -webkit-transition: all ease 0.5s;
+          transition: all ease 0.5s;
 }
 .roundling:after {
   content: "";
@@ -387,6 +391,35 @@ html, body {
   height: 10px;
   border-radius: 50%;
   background: #333;
+}
+
+.roundling:hover .eye-left .pupil, .roundling:hover .eye-right .pupil {
+  left: 10px;
+}
+
+.roundling.attacking .eye-left > .eyebrow {
+  -webkit-transform: rotateZ(90deg);
+          transform: rotateZ(90deg);
+}
+.roundling.attacking .eye-right > .eyebrow {
+  -webkit-transform: rotateZ(0deg);
+          transform: rotateZ(0deg);
+}
+
+.roundling.injured .eye-left .eyebrow {
+  top: -2px;
+}
+.roundling.injured .eye-left .pupil {
+  left: 10px;
+}
+.roundling.injured .eye-right .eyebrow {
+  top: -2px;
+}
+.roundling.injured .eye-right .pupil {
+  right: 25px;
+}
+.roundling.injured .mouth {
+  height: 25px;
 }
 
 .sword {

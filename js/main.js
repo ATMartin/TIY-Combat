@@ -30,6 +30,8 @@ Player.prototype = {
   },
   doAction: function(ability, target) {
     var target = target || ((ability.targetSelf) ? this : this.opponent);
+    this.model.find('.roundling').addClass('attacking');
+    target.model.find('.roundling').addClass('injured');
     doDamage(ability.damage, target);
     writeToConsole(this.name + " performed " + ability.name + " for " + ability.damage + "dmg to " + target.name + "!");
     var nextPlayer = (this === thisPlayer) ? opponent : thisPlayer;
@@ -217,7 +219,8 @@ var gameInit = function() {
 };
 
 var gameLoop = function(player) {
- 
+  player.model.find('.roundling').removeClass('attacking');
+  player.model.find('.roundling').removeClass('injured');
   if (player.isDead === false) {
     console.log(player.name + "'s turn!");
     if (!player.human) { randomAction(player); }

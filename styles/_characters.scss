@@ -33,6 +33,7 @@
       border-radius: 50%;
       top: 15px;
       left: 20px;
+      transition: all ease 0.5s;
     }
   }
 
@@ -54,6 +55,7 @@
     background: black;
     height: 20px;
     width: 40px;
+    transition: all ease 0.5s;
   }
 
   &:after {
@@ -69,6 +71,34 @@
 }
 
 //----------- END ROUNDLING CORE ---------------
+//----------- ANIMATIONS ----------------------
+
+//--Passive
+.roundling{
+  &:hover .eye-left .pupil,
+  &:hover .eye-right .pupil {
+    left: 10px;
+  }
+}
+
+//--Active (require JS assignment)
+.roundling.attacking {
+  .eye-left > .eyebrow  { transform: rotateZ(90deg); }
+  .eye-right > .eyebrow { transform: rotateZ(0deg);  }
+}
+
+.roundling.injured {
+  .eye-left {
+    .eyebrow { top: -2px; }
+    .pupil { left: 10px; }
+  }
+  .eye-right { 
+    .eyebrow { top: -2px; }
+    .pupil { right: 25px; }
+  }
+
+  .mouth { height: 25px; }
+}
 
 //----------- CLOTHING ------------------------
 
