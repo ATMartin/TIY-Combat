@@ -2,7 +2,7 @@
 var allAbilities = [],
     allClasses = [];
 
-// Player Object
+// Player Object (PURPOSE - "Setup")
 var Player = function(name, local, human, opts) {
   this.name = name;
   this.local = local;
@@ -44,7 +44,7 @@ Player.prototype = {
 };
 
 
-// Class Object
+// Class Object (PURPOSE - "Setup")
 var CharClass = function(name, abilities) {
   this.name = name;
   this.abilities = abilities;
@@ -57,7 +57,7 @@ CharClass.prototype = {
   abilities: []
 };
 
-// Ability Object
+// Ability Object (PURPOSE - "Setup")
 var Ability = function(name, ref, targetSelf, damage, description) {
   this.name = name;
   this.ref = ref;
@@ -76,7 +76,7 @@ Ability.prototype = {
 };
 
 
-// Init Basic Abilities
+// Init Basic Abilities (PURPOSE - "Data")
 var
   // DPS
   bodySlam = new Ability('Body Slam', 'bodySlam', false, 5, "You bash your opponent!"),
@@ -94,7 +94,7 @@ var
   wizard = new CharClass('Wizard', [magicMissile, finishHim]),
   thief = new CharClass('Thief', [bodySlam, potionHeal]);
   
-// DOM Elements
+// DOM Elements (PURPOSE - "Setup")
 var
   $console = $('.output'),
   
@@ -113,7 +113,7 @@ var
   $p2Status = $('.stat-box.player2 .status');
 
 
-// Players
+// Players (PURPOSE - "Data")
 var
   thisPlayer = new Player(null, true, true, { healthbar: $p1Healthbar, model: $p1Model, healthtext: $p1HealthText }),
   opponent = new Player("Enemy", true, false, { healthbar: $p2Healthbar, model: $p2Model, healthtext: $p2HealthText });
@@ -125,7 +125,7 @@ var randomEnemy = function() {
   opponent.class = opponent.class || classes[Math.floor(Math.random() * classes.length)];
 };
 
-// Modal Dialog Controls
+// Modal Dialog Controls (PURPOSE - "State")
 var sendToBack = function($el) {
   $el.css('z-index', -5);
 };
@@ -135,7 +135,7 @@ var bringToFront = function($el) {
 };
 
 
-// Game Console Controls
+// Game Console Controls (PURPOSE - "State")
 var writeToConsole = function(msg) {
   $console.text(msg + '\n' + $console.text());
 }
@@ -146,7 +146,8 @@ var clearConsole = function() {
 
 //---- GAME ACTIONS & LOGIC ---------
 
-var renderHealth = function(target) {
+// RENDERHEALTH (PURPOSE - "Presentation")
+var renderHealth = function(target) { 
   var percentage = Math.floor((target.healthNow/target.healthMax)*100);
   target.healthtext.text(percentage + "%");
   var newRot = 135 - (target.healthNow/target.healthMax)*90;
@@ -162,16 +163,19 @@ var renderHealth = function(target) {
   );
 }
 
+// DODAMAGE (PURPOSE - "State")
 var doDamage = function(dmg, target) {
   target.setHealth(target.healthNow - dmg);
   if (target.healthNow <= 0) { target.isDead = true; };
 };
 
+// RANDOMACTION (PURPOSE - "State");
 var randomAction = function(player) {
     var action = player.class.abilities[Math.floor(Math.random() * player.class.abilities.length)];
     player.doAction(action);
 };
 
+// LOADCHARMODEL (PURPOSE - "Presentation")
 var loadCharModel = function(player) {
   player.model.html($('[data-template="roundling"]').text());
   var weapon = null;
@@ -189,6 +193,7 @@ var loadCharModel = function(player) {
   if (weapon) { player.model.find('.weapon').html($('[data-template="'+weapon+'"]').text()); }
 };
 
+// ENDGAME (PURPOSE - "State")
 var endGame = function(player) {
   console.log(player.name + " has died first and lost the game!");
   $('.game-over-inner h1').text(player.name + $('.game-over-inner').text());
@@ -197,6 +202,8 @@ var endGame = function(player) {
 };
 
 //---- ONLOAD AND GAME LOOP----------
+
+//ONLOAD (PURPOSE - "Setup" / "State")
 $(document).ready(function() {
   sendToBack($('.game-over'));
   sendToBack($('.game-init'));
@@ -206,6 +213,7 @@ $(document).ready(function() {
   renderHealth(opponent, $p2Healthbar);  
 });
 
+//GAMEINIT (PURPOSE - "Setup" / "State")
 var gameInit = function() {
   
   $('.player1.name').text(thisPlayer.name);
@@ -227,6 +235,7 @@ var gameInit = function() {
   gameLoop(thisPlayer);    
 };
 
+//GAMELOOP (PURPOSE - "State")
 var gameLoop = function(player) {
   clearAnim(player);
   if (player.isDead === false) {
@@ -239,20 +248,25 @@ var gameLoop = function(player) {
 }
 //----- GRAPHICS EVENTS -------------
 
+//CLEARANIM (PURPOSE - "Presentation")
 var clearAnim = function(target) {
   target.model.find('.roundling').attr('class', 'roundling');
 }
 
+//ANIM (PURPOSE - "Presentation")
 var anim = function(target, animClass) {
   target.model.find('.roundling').addClass(animClass);
 };
 
 //----- EVENT HANDLERS --------------
+
+//SPLASH-GO (PURPOSE - "State")
 $('.splash-go').on('click', function() {
   sendToBack($('.splash'));
   bringToFront($('.game-init')); 
 });
 
+//GAME-GO (PURPOSE - "State")
 $('.game-go').on('click', function() {
   thisPlayer.name = $('input.username').val();
   gameInit();
@@ -260,48 +274,57 @@ $('.game-go').on('click', function() {
   bringToFront($('.game-main'));
 });
 
+//GAME-CLASS (PURPOSE - "Presentation" / "State")
 $('.game-class').on('click', function() {
   thisPlayer.class = eval($(this).attr('data-class'));
   $('.game-class').removeClass('game-select-highlight');
   $(this).addClass('game-select-highlight');
 });
 
+//ENEMY-CLASS (PURPOSE - "Presentation" / "State")
 $('.enemy-class').on('click', function() {
   opponent.class = eval($(this).attr('data-class'));
   $('.enemy-class').removeClass('game-select-highlight');
   $(this).addClass('game-select-highlight');
 });
 
+//GAME-SCENE (PURPOSE - "Presentation")
 $('.game-scene').on('click', function() {
   var scene = $(this).attr('data-scene');
   if (scene === 'hedges') { $('.hide-behind').css('background', 'url(/img/hedgerow.svg)'); }
   if (scene === 'woods')  { $('.hide-behind').css('background', 'url(/img/scene-forest.svg)'); }
 });
 
+//END-GAME (PURPOSE - "State");
 $('.end-game').on('click', function(e) { endGame(thisPlayer); });
 
+//ABILITY-MOUSEOVER (PURPOSE - "Presentation")
 $('.player1.abilities').on('mouseover', '.ability', function(e) {
   var me = $(this);
   $p1Details.text(_.find(thisPlayer.class.abilities, function(a) { return a.ref===me.attr('data-ability');}).description);  
 });
 
+//ABILITY-CLICK (PURPOSE - "State")
 $('.player1.abilities').on('click', '.ability', function(e) {
   var me = $(this);
   var action = _.find(thisPlayer.class.abilities, function(a) { return a.ref===me.attr('data-ability');});
   thisPlayer.doAction(action);
 });
 
+//ABILITY-MOUSEOVER (PURPOSE - "Presentation")
 $('.player2.abilities').on('mouseover', '.ability', function(e) {
   var me = $(this);
   $p2Details.text(_.find(opponent.class.abilities, function(a) { return a.ref===me.attr('data-ability');}).description);  
 });
 
+//ABILITY-CLICK (PURPOSE - "State")
 $('.player2.abilities').on('click', '.ability', function(e) {
   var me = $(this);
   var action = _.find(opponent.class.abilities, function(a) { return a.ref===me.attr('data-ability');});
   opponent.doAction(action);
 });
 
+//GAME-RELOAD (PURPOSE - "State")
 $('.game-reload').on('click', function(e) {
   window.location.reload();    
 });
